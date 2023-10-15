@@ -94,6 +94,27 @@ class HealthFactory {
       print(e);
     }
   }
+  
+  /// Opens native system settings for:
+  /// - Health on iOS 
+  /// - Health Connect on Android
+  /// 
+  /// Throws if the application is not installed on the device.
+  Future<void> openSystemSettings() async {
+    await _channel.invokeMethod('openSystemSettings');
+  }
+  
+  /// Checks the availability of Health Connect on Android platform.
+  ///
+  /// Returns a bool indicating whether Health Connect is available.
+  ///
+  /// On other platforms than Android it returns always true.
+  Future<bool> checkAvailability() async {
+    if (!Platform.isAndroid) return true;
+  
+    final result = await _channel.invokeMethod<bool>('checkAvailability');
+    return result ?? false;
+  }
 
   /// Requests permissions to access data types in Apple Health or Google Fit.
   ///
