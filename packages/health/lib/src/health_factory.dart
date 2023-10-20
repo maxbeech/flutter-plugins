@@ -116,6 +116,15 @@ class HealthFactory {
     return result ?? false;
   }
 
+  /// Tries to help install Health Connect on Android
+  ///
+  /// Throws if can't open activity
+  Future<void> installHealthConnect() async {
+    if (Platform.isAndroid) {
+      await _channel.invokeMethod('installHealthConnect');
+    }
+  }
+
   /// Requests permissions to access data types in Apple Health or Google Fit.
   ///
   /// Returns true if successful, false otherwise

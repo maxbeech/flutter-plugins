@@ -1395,6 +1395,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
             "useHealthConnectIfAvailable" -> useHealthConnectIfAvailable(call, result)
             "openSystemSettings" -> openSystemSettings(call, result)
             "checkAvailability" -> checkAvailability(call, result)
+            "installHealthConnect" -> installHealthConnect(call, result)
             "hasPermissions" -> hasPermissions(call, result)
             "requestAuthorization" -> requestAuthorization(call, result)
             "revokePermissions" -> revokePermissions(call, result)
@@ -1442,6 +1443,19 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
         healthConnectStatus = HealthConnectClient.getSdkStatus(context!!)
         healthConnectAvailable = healthConnectStatus == HealthConnectClient.SDK_AVAILABLE
         result?.success(healthConnectAvailable)
+    }
+
+    fun installHealthConnect(call: MethodCall, result: Result) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata&url=healthconnect%3A%2F%2Fonboarding"))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+            context?.startActivity(intent)
+            result.success(true)
+        } catch (e: Throwable) {
+            result.error("UNABLE_TO_START_ACTIVITY", e.message, e)
+        }
     }
     
     fun openSystemSettings(call: MethodCall, result: Result) {
